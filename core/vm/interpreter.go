@@ -17,6 +17,8 @@
 package vm
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -25,7 +27,24 @@ import (
 )
 
 // <specular modification>
-type EVMHook func(msg types.Message, evm *EVM) error //
+type MessageInterface interface {
+	GetTo() *common.Address
+	GetFrom() common.Address
+	GetNonce() uint64
+	GetValue() *big.Int
+	GetGasLimit() uint64
+	GetGasPrice() *big.Int
+	GetGasFeeCap() *big.Int
+	GetGasTipCap() *big.Int
+	GetData() []byte
+	GetAccessList() types.AccessList
+	GetBlobGasFeeCap() *big.Int
+	GetBlobHashes() []common.Hash
+	GetSkipAccountChecks() bool
+}
+
+type EVMHook func(msg MessageInterface, evm *EVM) error
+
 // <specular modification/>
 
 // Config are the configuration options for the Interpreter
